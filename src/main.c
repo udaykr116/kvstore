@@ -15,5 +15,11 @@ int main() {
     char *value2 = kv_get(table,"key2");
     char *value3 = kv_get(table,"this does not exist");
     printf("%s , %s , %s\n",value,value2,value3);
-    return 0;
+
+
+    kv_delete(table,"key1");
+    value  = NULL;
+    value = kv_get(table,"key1");
+
+    printf("%s , %s , %s\n",value,value2,value3);
 }

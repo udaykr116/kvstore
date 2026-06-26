@@ -18,6 +18,36 @@ size_t hash(char *val , int capacity)
 
 }
 
+// function kv_delete
+// params:
+//  -db:  a pointer to the db
+//  -key: a pointer to key
+// returns: index of deletion
+// -1   if not found
+int kv_delete(kv_t *db , char *key){
+    if (!db || !key) return -1 ;
+    size_t idx = hash(key , db->capacity);
+    for(int i = 0 ; i < db->capacity ; i++)
+    {
+        size_t real_idx = (idx + i) % db->capacity ;
+        kv_entry_t *entry  = &db->entries[real_idx];
+
+        if (entry->key == NULL) return -1 ;
+        if (entry->key && entry->key != TOMBSTONE && !strcmp(entry->key , key ))
+        {
+            free(entry->key);
+            free(entry->value);
+            entry->key = TOMBSTONE;
+            entry->value = NULL;
+            db->count--;
+            return real_idx ;
+        }
+    }
+    return -1 ;
+}
+
+
+
 // funtion kv_get 
 // params:
 //  -db:  a pointer to the db
