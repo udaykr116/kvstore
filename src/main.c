@@ -9,12 +9,11 @@ int main() {
 
     kv_put(table,"key1","value1");
     kv_put(table,"key1","overwrite");
-    kv_put(table,"key2","overwrite");
-    for(int i =0 ; i < table->capacity ; i++)
-    {
-       if (table->entries[i].key)
-       {
-           printf("[%d] %s: %s\n",i ,table->entries[i].key,table->entries[i].value);
-       }
-    }
+    kv_put(table,"key2","value2");
+
+    char *value = kv_get(table,"key1");
+    char *value2 = kv_get(table,"key2");
+    char *value3 = kv_get(table,"this does not exist");
+    printf("%s , %s , %s\n",value,value2,value3);
+    return 0;
 }

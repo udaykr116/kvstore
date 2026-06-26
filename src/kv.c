@@ -18,6 +18,34 @@ size_t hash(char *val , int capacity)
 
 }
 
+// funtion kv_get 
+// params:
+//  -db:  a pointer to the db
+//  -key: a pointer to key
+// returns: a pointer to the value , otherwise on
+// error return NULL , on not found return NULL
+
+char *kv_get(kv_t *db , char *key){
+    if (!db || !key) return NULL ;
+    
+    size_t idx = hash(key , db->capacity);
+    for(int i = 0 ; i < db->capacity ; i++)
+    { 
+        size_t real_idx = (idx + i) % db->capacity ;
+        kv_entry_t *entry  = &db->entries[real_idx];
+
+        // if no key , return nothing 
+        if (entry->key == NULL) return NULL ;
+
+        // find an entry and keys match 
+        if (entry->key && entry->value != TOMBSTONE && !strcmp(entry->key , key ))
+        {
+            return entry->value ;
+        }
+    }
+    return NULL ;
+}
+
 // funtion kv_put 
 // params: 
 //  -db:  a pointer to the db 
@@ -36,6 +64,7 @@ int kv_put(kv_t *db , char *key , char *value)
 
         kv_entry_t *entry  = &db->entries[real_idx];
 
+        //found the slot , occupied and the key matches 
         if (entry->key && ( entry->key != TOMBSTONE ) && !strcmp(entry->key , key ))
         {
             char *newval = strdup(value);
@@ -44,6 +73,7 @@ int kv_put(kv_t *db , char *key , char *value)
             return 0;
         }
 
+        // found the slot and its either empty or tombstone
         if(!entry->key || ( entry->key == TOMBSTONE )){
             char *newval = strdup(value);
             char *newkey = strdup(key);
