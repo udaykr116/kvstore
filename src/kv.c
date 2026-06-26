@@ -38,7 +38,7 @@ char *kv_get(kv_t *db , char *key){
         if (entry->key == NULL) return NULL ;
 
         // find an entry and keys match 
-        if (entry->key && entry->value != TOMBSTONE && !strcmp(entry->key , key ))
+        if (entry->key && entry->key != TOMBSTONE && !strcmp(entry->key , key ))
         {
             return entry->value ;
         }
