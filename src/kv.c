@@ -3,7 +3,7 @@
 #include <stdlib.h>
 
 
-size_t hash(char *val , int capacity)
+size_t hash(char *val , size_t capacity)
 {
     size_t hash = 0x12345678abcdefa;
     while(*val)
@@ -22,10 +22,10 @@ size_t hash(char *val , int capacity)
 // params:
 //  -db:  a pointer to the db
 // returns: 0 on success , -1 on failure
-int kv_free(kv_t *db)
+void  kv_free(kv_t *db)
 {
-    if (!db) return -1;
-    for (int i = 0 ; i < db->capacity ; i++)
+    if (!db) return ;
+    for (size_t  i = 0 ; i < db->capacity ; i++)
     {
         kv_entry_t *entry = &db->entries[i];
         if (entry->key && entry->key != TOMBSTONE)
@@ -39,7 +39,6 @@ int kv_free(kv_t *db)
     }
     free(db->entries);
     free(db);
-    return 0 ;
 }
 
 
@@ -52,7 +51,7 @@ int kv_free(kv_t *db)
 int kv_delete(kv_t *db , char *key){
     if (!db || !key) return -1 ;
     size_t idx = hash(key , db->capacity);
-    for(int i = 0 ; i < db->capacity ; i++)
+    for(size_t  i = 0 ; i < db->capacity ; i++)
     {
         size_t real_idx = (idx + i) % db->capacity ;
         kv_entry_t *entry  = &db->entries[real_idx];
@@ -84,7 +83,7 @@ char *kv_get(kv_t *db , char *key){
     if (!db || !key) return NULL ;
     
     size_t idx = hash(key , db->capacity);
-    for(int i = 0 ; i < db->capacity ; i++)
+    for(size_t  i = 0 ; i < db->capacity ; i++)
     { 
         size_t real_idx = (idx + i) % db->capacity ;
         kv_entry_t *entry  = &db->entries[real_idx];
@@ -113,7 +112,7 @@ int kv_put(kv_t *db , char *key , char *value)
     if (!db || !key || !value) return -1 ;
 
     size_t idx = hash(key , db->capacity);
-    for (int i = 0 ; i < db->capacity ; i++)
+    for (size_t  i = 0 ; i < db->capacity ; i++)
     {
         size_t real_idx = (idx  + i) % db->capacity ;
 
