@@ -22,4 +22,10 @@ int main() {
     value = kv_get(table,"key1");
 
     printf("%s , %s , %s\n",value,value2,value3);
+
+    kv_free(table);
+    table = NULL;
+
+    value = kv_get(table,"key1");
+    printf("%s\n",value);
 }
